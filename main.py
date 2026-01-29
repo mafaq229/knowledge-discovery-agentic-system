@@ -10,14 +10,16 @@ def main():
         ]
     }
 
-    result = app.invoke(initial_state)
-    print("Final Result:")
-    for message in result["messages"]:
-        print(f"\n[{message.__class__.__name__}]")
-        if hasattr(message, "content") and message.content:
-            print(message.content[:500])
-        if hasattr(message, "tool_calls") and message.tool_calls:
-            print(f"Tool Calls: {message.tool_calls}")
+    # streaming events from the graph application
+    for event in app.stream(initial_state):
+        for node_name, output in event.items():
+            print(f"--{node_name}--")
+            if "messages" in output:
+                for msg in output["messages"]:
+                    if hasattr(msg, "content") and msg.content:
+                        print(f"Content: {msg.content[:500]}")
+                    if hasattr(msg, "tool_calls") and msg.tool_calls:
+                        print(f"Tool Calls: {[tc['name'] for tc in msg.tool_calls]}")
 
 
 if __name__ == "__main__":
