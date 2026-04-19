@@ -1,4 +1,4 @@
-from typing import Optional, Any
+from typing import Any
 from enum import Enum
 from pydantic import BaseModel, computed_field, Field
 
